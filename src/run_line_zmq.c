@@ -6,11 +6,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include <mpi.h>
 #include <omp.h>
 
-#define APP_NAME "run_line"
+#include "zhelper.h"
+
+#define APP_NAME "run_line_zmq"
 #define VERSION "0.2"
 
 bool opt_debug = false;
@@ -49,7 +50,7 @@ static struct option const options[] = {
 
 static void show_usage_and_exit(int status) {
     if (status)
-        fprintf(stderr, "Try" APP_NAME " --help' for more information\n");
+                fprintf(stderr, "Try" APP_NAME " --help' for more information\n");
     else
         printf(usage);
     exit(status);
@@ -155,16 +156,39 @@ int run_task(const char *task) {
     return 1;
 }
 
+void *start_zmq(void *argv){
+    int i;
+    char msgType[64];
+    char msgTagName[64];
+    char msgTagValue[64];
+    void *context = zmq_ctx_new();
+    void *responder = zmq_socket(context, ZMQ_REP);
+    zmq_bind(responder, "tcp://*.8888");
+    printf("zmq listening on port 8888\n");
+    fflush(stdout);
+    for(;;){
+        char *message = s_recv(responder);
+        if(message){
+            printf("Message arive: [$s]\n",message);
+            fflush(stdout);
+            sscanf(message, "%s\t%s\t%s", (char *)msgType, (char *) msgTagName, (char *) msgTagValue);
+            if(strcmp(msgType, "add") == 0)
+            {
+            }
+        }
+    }
+}
+
 int main(int argc, char **argv) {
     int omp_rank;
     int provided, required=MPI_THREAD_FUNNELED;
     char processor_name[max_mpi_processor_name];
     int namelen;
-    
+
 //MPI_Init(NULL, NULL);
     int world_size;
     int world_rank;
-    
+
     int number;
     char **commands = NULL;
     int counter = 0;
