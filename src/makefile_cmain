@@ -1,0 +1,3 @@
+all:
+  gcc -c c_main.c
+  gfortran c_main.o f_function.f90 -o test_c.x
