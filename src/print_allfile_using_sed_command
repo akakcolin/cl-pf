@@ -1,0 +1,14 @@
+#!/usr/local/bin/newlisp
+;;
+;; 生成替换xyz文件的第二行为当前文件名的sed命令
+(define (sed-tree dir)
+ (dolist (item (directory dir {^[^.]}))
+   (if (directory? (append dir item))
+    ; search the directory
+    (sed-tree (append dir item "/"))
+    ; or process the file 
+    (if (not (directory? item))
+    (println (append "sed -i '2s/zq1/" item "/' "  dir item))))))    
+
+(sed-tree {/home/zhliu/small_zq1/})
+(exit)
