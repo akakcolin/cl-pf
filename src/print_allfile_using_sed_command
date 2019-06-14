@@ -11,7 +11,7 @@
     (sed-tree (append dir item "/"))
     ; or process the file 
     (if (not (directory? item))
-    (println (append "sed -i '2s/zq1/" item "/' "  dir item))))))    
+    (println (append "sed -i '2s/zq1/" item "/' "  dir "/" item))))))    
 
 (sed-tree (main-args 2))
 (exit)

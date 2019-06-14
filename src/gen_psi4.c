@@ -352,6 +352,7 @@ void generate_psi4_inputfile(const char *filepath,
   fprintf(fid, "set_num_threads(%d)\n", num_threads),
   fprintf(fid, "set basis %s\n", basis);
   fprintf(fid, "set guess sad\n");
+  fprintf(fid, "set_max_iter=100\n");
   fprintf(fid, "set scf_type %s\n", scf_type);
   fprintf(fid, "set freeze_core True\n");
   fprintf(fid, "%s(\'%s\')\n", job_type, name);
