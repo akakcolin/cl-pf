@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# just run ./get_aims_ef  aims.out
+
+aimsout=$1
+
+grep  "Maximum force component" $aimsout | awk '{print $5}' > _tmp_force
+grep "| Total energy                  : " $aimsout | awk 'NR%2==0' | awk '{print $7}' > _tmp_energy
+paste _tmp_energy _tmp_force 
+rm _tmp_energy 
+rm _tmp_force
+

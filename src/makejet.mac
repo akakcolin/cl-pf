@@ -1,0 +1,42 @@
+N:5$
+
+eq: diff(y(x),x) = cos(y(x)) + cos(x)$
+genfort(x):=block (
+for y in x do if atom(y) then 0
+else if op(y)=":" then fortran(apply("=",args(y))) else if op(y)="[" then genfort(y) else fortran(y))$
+
+print("Creating Taylor series method of order",N,"for")$
+
+ print("")$
+
+display(eq)$
+Y[0]:yn$
+
+J[0]:y(x)$
+
+for n:1 thru N do (
+           Y[n]:concat('Y,n),
+           J[n]:subst(eq, ev(diff(J[n-1],x)))
+)$
+
+ optimprefix:t$
+
+r0:makelist(Y[i]=J[i], i, 1,N)$
+
+su:0$
+
+for i:N thru 0 step -1 do
+su:su*h/(i+1) + Y[i]$
+
+r1:append(r0,[jet=su])$
+
+r2:subst(y(x)=yn, r1)$
+
+r3:optimize(r2)$
+
+ with_stdout("jet.f90",
+print("   function jet(x, yn, h)"),
+print("   implicit real*8 (a-z)"),
+genfort(rest(r3)),
+print("    end")
+)$
