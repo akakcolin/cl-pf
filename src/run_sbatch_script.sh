@@ -9,3 +9,5 @@ sbatch  run_$i.sh
 sleep 1
 done
 
+#awk '{split(FILENAME, a, "."); prefix=a[1]; print > (prefix "." int((NR-1)/98) + 1 ".txt")}' opt.extxyz
+
